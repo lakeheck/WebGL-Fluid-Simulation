@@ -786,10 +786,18 @@ const splatShader = compileShader(gl.FRAGMENT_SHADER, `
     uniform vec2 point;
     uniform float radius;
 
+    uniform sampler2D uColor;
+
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        vec3 splat = exp(-dot(p, p) / radius) * color;
+        vec3 splat;
+        if(color.z == 0){ //if we are passing in an rg color then we know we are talking about velocity. hacky fix to be updated later 
+            splat = exp(-dot(p, p) / radius) * color;
+        }
+        else{
+            splat = exp(-dot(p,p)/radius) * texture2D(uColor, vVU).rgb;
+        }
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
     }
@@ -1088,7 +1096,7 @@ function initFramebuffers () {
     else //resize if needed 
         dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
         dye.write.texture = baseImg;
-        blit(dye);
+        blit(dye.write);
     if (velocity == null)
         velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering);
     else //resize if needed 
@@ -1551,13 +1559,18 @@ function splat (x, y, dx, dy, color) {
     gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatProgram.uniforms.point, x, y);
+    //here is where i adjust the velocity impact each step 
+    //where we are taking dy dx from change in pointer location between frames. Bigger movement = bigger force 
     gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
+    //we should be able to set this to a sampler that is computed based on some noise texture 
+    
     gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
-
+    //and here is where we adjust the color0 
     gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
     gl.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
+    gl.uniform1i(splatProgram.uniforms.uColor, baseImg.attach(1));
     blit(dye.write);
     dye.swap();
 }
