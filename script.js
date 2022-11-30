@@ -220,7 +220,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('Output res').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('ooutput res').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
@@ -792,7 +792,7 @@ const splatShader = compileShader(gl.FRAGMENT_SHADER, `
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
         vec3 splat;
-        if(color.z == 0){ //if we are passing in an rg color then we know we are talking about velocity. hacky fix to be updated later 
+        if(color.z == 0.0){ //if we are passing in an rg color then we know we are talking about velocity. hacky fix to be updated later 
             splat = exp(-dot(p, p) / radius) * color;
         }
         else{
@@ -1095,8 +1095,8 @@ function initFramebuffers () {
 
     else //resize if needed 
         dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
-        dye.write.texture = baseImg;
-        blit(dye.write);
+        // dye.write.texture = baseImg;
+        // blit(dye.write);
     if (velocity == null)
         velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering);
     else //resize if needed 
@@ -1563,7 +1563,6 @@ function splat (x, y, dx, dy, color) {
     //where we are taking dy dx from change in pointer location between frames. Bigger movement = bigger force 
     gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
     //we should be able to set this to a sampler that is computed based on some noise texture 
-    
     gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
