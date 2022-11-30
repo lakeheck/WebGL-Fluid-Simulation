@@ -1,16 +1,14 @@
 # WebGL Fluid Simulation
 
-[Play here](https://paveldogreat.github.io/WebGL-Fluid-Simulation/)
-
-<img src="/screenshot.jpg?raw=true" width="880">
-
 ## References
 
-http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html
+Forked from https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
 
-https://github.com/mharrys/fluids-2d
+NVDIA guide to implementing fluid simulations on the GPU - http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html
 
-https://github.com/haxiomic/GPU-Fluid-Experiments
+Fluid simulation in TouchDesigner - https://www.youtube.com/watch?v=2k6H5Qa_fCE
+
+Real-Time Fluid Dynamics for Games by Jos Stam - http://graphics.cs.cmu.edu/nsp/course/15-464/Spring11/papers/StamFluidforGames.pdf
 
 ## License
 
