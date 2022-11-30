@@ -1040,6 +1040,8 @@ let sunraysTemp;
 //load texture for dithering
 let ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
 
+let baseImg = createTextureAsync('textures/flowers_fence.jpg');
+
 
 //create all our shader programs 
 const blurProgram            = new Program(blurVertexShader, blurShader);
@@ -1082,9 +1084,11 @@ function initFramebuffers () {
     //this lets us define the buffer objects that we wil want to use for feedback 
     if (dye == null)
         dye = createDoubleFBO(dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
+
     else //resize if needed 
         dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
-
+        dye.write.texture = baseImg;
+        blit(dye);
     if (velocity == null)
         velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering);
     else //resize if needed 
@@ -1387,6 +1391,7 @@ function step (dt) {
     blit(velocity.write);
     velocity.swap();
 
+    //apply same advection logic to color
     if (!ext.supportLinearFiltering)
         gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
     gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.attach(0));
