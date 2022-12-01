@@ -2,7 +2,7 @@
 
 Cross implemented in TouchDesigner https://github.com/lakeheck/TouchDesigner_Network/tree/master/simulations/fluid%20simulation
 
-##Overview 
+## Overview 
 A fluid simulation implemented fully on the GPU in TouchDesigner. Based on Jos Stam’s seminal paper using Navier-Stokes equations and a grid-based approach to model fluids, this simulation runs in real time at high resolutions (up to 5,000x5,000 pixels) and is highly versitle. 
 
 As Stam notes, the Navier-Stokes equations describe the evolution of a velocity field over time. This velocity field represents our fluid and is composed from several intermediate layers: 
