@@ -54,7 +54,7 @@ let config = {
     DYE_RESOLUTION: 1024, //output res 
     CAPTURE_RESOLUTION: 512, //screen capture res 
     DENSITY_DISSIPATION: 0.3,
-    VELOCITY_DISSIPATION: 0.2,
+    VELOCITY_DISSIPATION: 2.15,
     PRESSURE: 0.8,
     PRESSURE_ITERATIONS: 30,
     CURL: 30,
