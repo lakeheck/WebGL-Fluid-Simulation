@@ -52,6 +52,7 @@ resizeCanvas();
 let config = {
     SIM_RESOLUTION: 256, //simres
     DYE_RESOLUTION: 1024, //output res 
+    ASPECT: 1.0,
     CAPTURE_RESOLUTION: 512, //screen capture res 
     DENSITY_DISSIPATION: 0.3,
     VELOCITY_DISSIPATION: 2.15,
@@ -1682,10 +1683,22 @@ function step (dt) {
     gl.disable(gl.BLEND);
 
     //first we generate some noise to create a velocity map we can use 
-
-
-
     
+    noiseProgram.bind();
+    gl.uniform1f(noiseProgram.uniforms.uPeriod, 0.75); 
+    gl.uniform3f(noiseProgram.uniforms.uTranslate, dx, dy, 0.0);
+    gl.uniform1f(noiseProgram.uniforms.uAmplitude, 1.); 
+    gl.uniform1f(noiseProgram.uniforms.uSeed, 1.); 
+    gl.uniform1f(noiseProgram.uniforms.uExponent, 1.); 
+    gl.uniform1f(noiseProgram.uniforms.uRidgeThreshold, 1.); 
+    gl.uniform3f(noiseProgram.uniforms.uScale, 1., 1., 1.); 
+    gl.uniform1f(noiseProgram.uniforms.uAspect, config.VELOCITY_DISSIPATION); 
+    blit(noise);
+
+
+
+
+
     curlProgram.bind();
     gl.uniform2f(curlProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
     gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
