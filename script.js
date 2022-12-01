@@ -222,7 +222,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_12').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_13').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
@@ -1592,21 +1592,21 @@ function multipleSplats (amount) {
 
 function splat (x, y, dx, dy, color) {
     splatVelProgram.bind();
-    gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
-    gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform2f(splatProgram.uniforms.point, x, y);
-    gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
-    gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
+    gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform2f(splatVelProgram.uniforms.point, x, y);
+    gl.uniform3f(splatVelProgram.uniforms.color, dx, dy, 0.0);
+    gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
 
 
     splatColorProgram.bind();
-    gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform2f(splatProgram.uniforms.point, x, y);
-    gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
-    gl.uniform1i(splatProgram.uniforms.uColor, dye.read.attach(1));
-    gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform2f(splatColorProgram.uniforms.point, x, y);
+    gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
+    gl.uniform1i(splatColorProgram.uniforms.uColor, dye.read.attach(1));
+    gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(dye.write);
     dye.swap();
 }
