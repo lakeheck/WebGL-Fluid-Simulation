@@ -812,28 +812,11 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       return t;
     }
 
-
-    out vec4 fragColor;
     void main()
     {
       //create vec3 with z value for translate
-        vec3 st = vec3(vUV, 0.0);
-      //first pass, displace by grid fxn
-      // DISP(ang, dis, monoSimplex(st, 4444.0)*0.25);
-      //second pass, displace with recursively warped domain
-      // DISP(ang, dis2, 0.5);
-      //use warped domain to create final output
-      //float seed = 1.8;
-      //float noise = monoSimplex(st, seed);
-      //colorize output using palette 
-      //int idx = int(floor(noise*5.0));
-      //float pct = fract(noise *5.0);
-      //vec4 color = mix(palette[int(mod(idx,5.0))], palette[int(mod(idx+1,5.0))], pct);
-    
-    
-    
+      vec3 st = vec3(vUV, 0.0);
       vec4 color = fbm(st, uSeed); 
-    
       //output
       gl_FragColor = (color);
     
@@ -1394,6 +1377,7 @@ let bloom;
 let bloomFramebuffers = [];
 let sunrays;
 let sunraysTemp;
+let noise;
 
 //load texture for dithering
 let ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
