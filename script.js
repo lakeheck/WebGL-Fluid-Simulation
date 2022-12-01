@@ -222,7 +222,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_6').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_7').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
@@ -1041,7 +1041,7 @@ let sunraysTemp;
 
 //load texture for dithering
 let ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
-let picture = createTextureAsync('flowers_fence.jpg');
+let picture = createTextureAsync('flowers_fence.JPG');
 console.log('loaded picture successfully');
 
 //create all our shader programs 
