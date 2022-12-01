@@ -9,34 +9,36 @@ const promoPopup = document.getElementsByClassName('promo')[0];
 const promoPopupClose = document.getElementsByClassName('promo-close')[0];
 
 
+////////////////////////////////////////////////////////////////    KEEPING THE BELOW FOR REFERENCE BUT NOT USED IN THIS PROJECT ///////////////////////////////////////////////
+//from https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
 //test if the user is accessing from a mobile device 
-if (isMobile()) {
-    setTimeout(() => {
-        promoPopup.style.display = 'table';
-    }, 20000);
-}
+// if (isMobile()) {
+//     setTimeout(() => {
+//         promoPopup.style.display = 'table';
+//     }, 20000);
+// }
 
 //callback fxn to listen for click event on the "Close" x on the popup
 //notice we are listening for callback from the promo-close element, but the action is taken on the main promo element 
-promoPopupClose.addEventListener('click', e => {
-    promoPopup.style.display = 'none';
-});
+// promoPopupClose.addEventListener('click', e => {
+//     promoPopup.style.display = 'none';
+// });
 
 
 //callback to listen for click on link 
-const appleLink = document.getElementById('apple_link');
-appleLink.addEventListener('click', e => {
-    ga('send', 'event', 'link promo', 'app');
-    //define what link to actually open when this element is clicked 
-    window.open('https://apps.apple.com/us/app/fluid-simulation/id1443124993');
-});
+// const appleLink = document.getElementById('apple_link');
+// appleLink.addEventListener('click', e => {
+//     ga('send', 'event', 'link promo', 'app');
+//     //define what link to actually open when this element is clicked 
+//     window.open('https://apps.apple.com/us/app/fluid-simulation/id1443124993');
+// });
 
 //callback for link 
-const googleLink = document.getElementById('google_link');
-googleLink.addEventListener('click', e => {
-    ga('send', 'event', 'link promo', 'app');
-    window.open('https://play.google.com/store/apps/details?id=games.paveldogreat.fluidsimfree');
-});
+// const googleLink = document.getElementById('google_link');
+// googleLink.addEventListener('click', e => {
+//     ga('send', 'event', 'link promo', 'app');
+//     window.open('https://play.google.com/store/apps/details?id=games.paveldogreat.fluidsimfree');
+// });
 
 // Simulation section
 
@@ -48,18 +50,18 @@ resizeCanvas();
 
 //inital config for sim params 
 let config = {
-    SIM_RESOLUTION: 128, //simres
+    SIM_RESOLUTION: 256, //simres
     DYE_RESOLUTION: 1024, //output res 
     CAPTURE_RESOLUTION: 512, //screen capture res 
-    DENSITY_DISSIPATION: 0.1,
+    DENSITY_DISSIPATION: 0.3,
     VELOCITY_DISSIPATION: 0.2,
     PRESSURE: 0.8,
-    PRESSURE_ITERATIONS: 20,
+    PRESSURE_ITERATIONS: 30,
     CURL: 30,
     SPLAT_RADIUS: 0.25,
     SPLAT_FORCE: 6000,
     SHADING: true,
-    COLORFUL: true,
+    COLORFUL: false,
     COLOR_UPDATE_SPEED: 10,
     PAUSED: false,
     BACK_COLOR: { r: 0, g: 0, b: 0 },
