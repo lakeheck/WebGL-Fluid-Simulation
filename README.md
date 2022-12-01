@@ -1,4 +1,4 @@
-### WebGL Fluid Simulation
+# WebGL Fluid Simulation
 
 Cross implemented in TouchDesigner https://github.com/lakeheck/TouchDesigner_Network/tree/master/simulations/fluid%20simulation
 
