@@ -1284,7 +1284,7 @@ function update () {
     if (!config.PAUSED)
         step(dt); //do a calculation step 
     render(null);
-    // blit(picture);
+    blit(picture);
     requestAnimationFrame(update);
 }
 
