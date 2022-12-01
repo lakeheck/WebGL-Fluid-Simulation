@@ -222,7 +222,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_15').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_16').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
@@ -1430,8 +1430,8 @@ function step (dt) {
     // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform2f(splatVelProgram.uniforms.point, x, y);
-    gl.uniform3f(splatVelProgram.uniforms.color, dx, dy, 1);
+    gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
+    gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
     gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
