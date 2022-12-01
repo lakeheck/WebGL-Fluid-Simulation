@@ -764,7 +764,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       for(int i = 0; i<5; i++){
         NOISE_RGB(monoSimplex, 2.4);
     
-        color = monoSimplex(displace(st, noiseRGB.rg*i/5.0, vec2(.5), vec2(0.5), 0.05*i), seed*i);
+        color = monoSimplex(displace(st, noiseRGB.rg*float(i)/5.0, vec2(.5), vec2(0.5), 0.05*i), seed*float(i));
       }
       return color;
     }
@@ -774,12 +774,12 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
     }
     
     
-    float dis(vec3 st){
-      float d = grid(vUV.st, 7.0, 0.45, PI/4);
-      // d = texture(sTD2DInputs[0],vUV.st).r;
-      FBM(monoSimplex, -743.4838)
-      return d *t;
-    }
+    // float dis(vec3 st){
+    //   float d = grid(vUV.st, 7.0, 0.45, PI/4.);
+    //   // d = texture(sTD2DInputs[0],vUV.st).r;
+    //   FBM(monoSimplex, -743.4838)
+    //   return d *t;
+    // }
     
     float dis2(vec3 st){
       NOISE_RGB(monoSimplex, 2.4);
@@ -795,7 +795,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
     #define DISP(ANG, DIST, MAX) st.xy = st.xy + vec2(cos(ANG(st)*TWOPI), sin(ANG(st)*TWOPI)) * DIST(st) * MAX;
     
     
-    vec4[] palette = {vec4(.875, .0859375, 0.16796875, 1.0), vec4(1), vec4(0,.3203125, 0.64453125, 1.0), vec4(0.0, 0.0, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0)};
+    //vec4[] palette = {vec4(.875, .0859375, 0.16796875, 1.0), vec4(1.), vec4(0,.3203125, 0.64453125, 1.0), vec4(0.0, 0.0, 0.0, 1.0), vec4(1.0, 1.0, 1.0, 1.0)};
     
     vec4 fbm(vec3 st, float seed){
       float G=0.5; 
@@ -805,7 +805,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       for(int i=0; i<8; i++){
         t += a*rgbSimplex(freq*st, seed);
         freq*= 2.0;
-        freq = pow(2.0, i);
+        freq = pow(2.0, float(i));
         a*=G;
         }
       return t;
