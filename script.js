@@ -808,10 +808,13 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     uniform vec2 point;
     uniform float radius;
 
+    uniform sampler2D uForceMap;
+    uniform sampler2D uDensityMap;
+
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        vec3 splat = exp(-dot(p, p) / radius) * color;
+        vec3 splat = (exp(-dot(p, p) / radius) + texture2D(uDensityMap, vUv).xyz) * color;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
     }
@@ -1594,6 +1597,8 @@ function splat (x, y, dx, dy, color) {
     //splitting this into two so that we can splat velocity and color each from a map 
     splatVelProgram.bind();
     gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
+    // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
+    gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatVelProgram.uniforms.point, x, y);
     gl.uniform3f(splatVelProgram.uniforms.color, dx, dy, 0.0);
