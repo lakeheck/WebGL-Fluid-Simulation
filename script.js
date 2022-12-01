@@ -1650,6 +1650,7 @@ function resizeCanvas () {
     return false;
 }
 
+
 function updateColors (dt) {//used to update the color map for each pointer, which happens slower than the entire sim updates 
     if (!config.COLORFUL) return;
     
