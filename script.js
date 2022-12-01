@@ -1039,7 +1039,7 @@ let sunraysTemp;
 
 //load texture for dithering
 let ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
-
+let picture = createTextureAsync('flowers_fence.jpg');
 
 //create all our shader programs 
 const blurProgram            = new Program(blurVertexShader, blurShader);
@@ -1282,6 +1282,7 @@ function update () {
     if (!config.PAUSED)
         step(dt); //do a calculation step 
     render(null);
+    // blit(picture);
     requestAnimationFrame(update);
 }
 
