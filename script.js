@@ -217,7 +217,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
     return status == gl.FRAMEBUFFER_COMPLETE;
 }
 
-let parName = 'testing_name';
+const parName = 'testing_name';
 
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
