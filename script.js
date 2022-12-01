@@ -818,16 +818,16 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       //second pass, displace with recursively warped domain
       // DISP(ang, dis2, 0.5);
       //use warped domain to create final output
-      float seed = 1.8;
-      float noise = monoSimplex(st, seed);
+      //float seed = 1.8;
+      //float noise = monoSimplex(st, seed);
       //colorize output using palette 
-      int idx = int(floor(noise*5.0));
-      float pct = fract(noise *5.0);
-      vec4 color = mix(palette[int(mod(idx,5.0))], palette[int(mod(idx+1,5.0))], pct);
+      //int idx = int(floor(noise*5.0));
+      //float pct = fract(noise *5.0);
+      //vec4 color = mix(palette[int(mod(idx,5.0))], palette[int(mod(idx+1,5.0))], pct);
     
     
     
-      color = fbm(st, uSeed); 
+      vec4 color = fbm(st, uSeed); 
     
       //output
       gl_FragColor = (color);
@@ -1692,7 +1692,7 @@ function step (dt) {
     gl.disable(gl.BLEND);
 
     //first we generate some noise to create a velocity map we can use 
-    
+
 
 
     
