@@ -1118,12 +1118,12 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
         vec3 splat = vec3(0.0);
-        if(uClick == 0){ //click is 0 if we are simply adding from force map
-            splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * (normalize(texture2D(uForceMap, vUv).rgb)*2.0-1.0) * uVelocityScale;
-        }
-        else{ //or 1 if the splat is coming from a user interaction 
-            splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
-        }
+        splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * (normalize(texture2D(uForceMap, vUv).rgb)*2.0-1.0) * uVelocityScale;
+        // if(uClick == 0){ //click is 0 if we are simply adding from force map
+        // }
+        // else{ //or 1 if the splat is coming from a user interaction 
+        //     splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
+        // }
         splat.z = 0.0;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
@@ -1152,11 +1152,11 @@ const splatColorShader = compileShader(gl.FRAGMENT_SHADER, `
 
         vec3 splat = vec3(0);
         splat = texture2D(uDensityMap, vUv).xyz * texture2D(uColor, vUv).xyz;
-        if(uClick == 0){
-        }
-        else{
-            splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
-        }   
+        // if(uClick == 0){
+        // }
+        // else{
+        //     splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
+        // }   
         splat = smoothstep(0.0, 1.0, splat);
         splat *= uFlow;
         vec3 base = texture2D(uTarget, vUv).xyz;
