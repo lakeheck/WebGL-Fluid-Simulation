@@ -807,7 +807,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       for(int i=0; i<8; i++){
         t += a*rgbSimplex(freq*st, seed);
         freq*= 2.0;
-        freq = pow(2.0, float(i));
+        //freq = pow(2.0, float(i));
         a*=G;
         }
       return t;
