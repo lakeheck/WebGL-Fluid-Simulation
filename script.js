@@ -1981,17 +1981,17 @@ function splat (x, y, dx, dy, color) {
     // blit(dye.write);
     // dye.swap();
 
-    splatProgram.bind();
-    gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
-    gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
-    gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
-    gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
-    gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
-    gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
-    gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
-    blit(dye.write);
-    dye.swap();
+    // splatProgram.bind();
+    // gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
+    // gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    // gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
+    // gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
+    // gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
+    // gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
+    // gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
+    // gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    // blit(dye.write);
+    // dye.swap();
 }
 
 function correctRadius (radius) {
