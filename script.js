@@ -1686,7 +1686,7 @@ function step (dt) {
     
     noiseProgram.bind();
     gl.uniform1f(noiseProgram.uniforms.uPeriod, 0.75); 
-    gl.uniform3f(noiseProgram.uniforms.uTranslate, dx, dy, 0.0);
+    gl.uniform3f(noiseProgram.uniforms.uTranslate, 0.0, 0.0, 0.0);
     gl.uniform1f(noiseProgram.uniforms.uAmplitude, 1.); 
     gl.uniform1f(noiseProgram.uniforms.uSeed, 1.); 
     gl.uniform1f(noiseProgram.uniforms.uExponent, 1.); 
