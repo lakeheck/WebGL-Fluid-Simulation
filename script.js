@@ -1105,11 +1105,12 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
 
     uniform sampler2D uForceMap;
     uniform sampler2D uDensityMap;
-
+    uniform sampler2D uForceMap;
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * color;
+        vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
+        splat = texture2D(uDensityMap, vUv).xyz * texture2D(uForceMap, vUv).rgb;
         splat.z = 0.0;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
@@ -1744,6 +1745,7 @@ function step (dt) {
     gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
+    gl.uniform1i(splatVelProgram.uniforms.uDensityMap, noise.attach(2)); //add noise for velocity map 
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
     gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
