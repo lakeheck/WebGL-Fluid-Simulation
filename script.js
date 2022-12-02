@@ -1109,11 +1109,13 @@ const splatColorClickShader = compileShader(gl.FRAGMENT_SHADER, `
     uniform vec3 color;
     uniform vec2 point;
     uniform float radius;
+    uniform float uFlow;
 
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
         vec3 splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
+        splat *= uFlow;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
     }
@@ -2004,7 +2006,7 @@ function splat (x, y, dx, dy, color) {
     // dye.swap();
 
     splatColorClickProgram.bind();
-    // gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
+    gl.uniform1f(splatColorClickProgram.uniforms.uFlow, config.FLOW);
     gl.uniform1f(splatColorClickProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatColorClickProgram.uniforms.point, x, y);
     gl.uniform1i(splatColorClickProgram.uniforms.uTarget, dye.read.attach(0));
