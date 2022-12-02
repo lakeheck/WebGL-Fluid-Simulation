@@ -1745,7 +1745,7 @@ function step (dt) {
     gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
-    gl.uniform1i(splatVelProgram.uniforms.uDensityMap, noise.attach(2)); //add noise for velocity map 
+    gl.uniform1i(splatVelProgram.uniforms.uForceMap, noise.attach(2)); //add noise for velocity map 
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
     gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
