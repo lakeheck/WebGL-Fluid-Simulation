@@ -1109,8 +1109,8 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
-        splat = texture2D(uDensityMap, vUv).xyz * texture2D(uForceMap, vUv).rgb;
+        //vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
+        vec3 splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * normalize(texture2D(uForceMap, vUv).rgb);
         splat.z = 0.0;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
