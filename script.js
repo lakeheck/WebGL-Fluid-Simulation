@@ -225,7 +225,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_18').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_19').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
@@ -804,7 +804,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
       float freq = 1.0; 
       float a = 1.0; 
       vec4 t = vec4(0.0);
-      for(int i=0; i<8; i++){
+      for(int i=0; i<4; i++){
         t += a*rgbSimplex(freq*st, seed);
         freq*= 2.0;
         //freq = pow(2.0, float(i));
@@ -1133,6 +1133,7 @@ const splatColorShader = compileShader(gl.FRAGMENT_SHADER, `
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
         vec3 splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
+        splat = texture2D(uColor, vUv).xyz;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
     }
@@ -1752,6 +1753,15 @@ function step (dt) {
     gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
+
+    splatColorProgram.bind();
+    gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
+    gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
+    gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
+    gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    blit(dye.write);
+    dye.swap();
     
     advectionProgram.bind();
     gl.uniform2f(advectionProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
