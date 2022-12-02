@@ -553,7 +553,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
     #define PI 3.141592653589793
     #define TWOPI 6.28318530718
 
-    varying vec2 vUV;
+    varying vec2 vUv;
 
 
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -818,7 +818,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
     void main()
     {
       //create vec3 with z value for translate
-      vec3 st = vec3(vUV, 0.0);
+      vec3 st = vec3(vUv, 0.0);
       vec4 color = fbm(st, uSeed); 
       //output
       gl_FragColor = (color);
