@@ -80,6 +80,9 @@ let config = {
     SUNRAYS: true,
     SUNRAYS_RESOLUTION: 196,
     SUNRAYS_WEIGHT: 1.0,
+    FORCE_MAP_ENABLE: true,
+    DENSITY_MAP_ENABLE: true, 
+    COLOR_MAP_ENABLE:true
 }
 
 
@@ -1786,31 +1789,31 @@ function step (dt) {
     blit(velocity.write);
     velocity.swap();
 
-    splatVelProgram.bind();
-    gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
-    // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
-    gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
-    gl.uniform1i(splatVelProgram.uniforms.uForceMap, noise.attach(2)); //add noise for velocity map 
-    gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform1f(splatVelProgram.uniforms.uVelocityScale, config.VELOCITYSCALE);
-    gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
-    gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
-    gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
-    gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
-    blit(velocity.write);
-    velocity.swap();
+    // splatVelProgram.bind();
+    // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0)); 
+    // // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
+    // gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1)); //density map
+    // gl.uniform1i(splatVelProgram.uniforms.uForceMap, noise.attach(2)); //add noise for velocity map 
+    // gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    // gl.uniform1f(splatVelProgram.uniforms.uVelocityScale, config.VELOCITYSCALE);
+    // gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
+    // gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
+    // gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
+    // gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    // blit(velocity.write);
+    // velocity.swap();
 
-    splatColorProgram.bind();
-    gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
-    gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
-    gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
-    gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
-    gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
-    gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
-    gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
-    blit(dye.write);
-    dye.swap();
+    // splatColorProgram.bind();
+    // gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
+    // gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    // gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
+    // gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
+    // gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1)); //color map
+    // gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2)); //density map
+    // gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
+    // gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    // blit(dye.write);
+    // dye.swap();
     
     advectionProgram.bind();
     gl.uniform2f(advectionProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
