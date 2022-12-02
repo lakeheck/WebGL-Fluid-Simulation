@@ -229,7 +229,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 
 
 function startGUI () {
-    const parName = 'testing_name';
+    const parName = 'quality_23';
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
     gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name(parName).onFinishChange(initFramebuffers);
@@ -244,6 +244,11 @@ function startGUI () {
     gui.add(config, 'SHADING').name('shading').onFinishChange(updateKeywords);
     gui.add(config, 'COLORFUL').name('colorful');
     gui.add(config, 'PAUSED').name('paused').listen();
+
+    let mapFolder = gui.addFolder('Maps');
+    mapFolder.add(config, 'FORCE_MAP_ENABLE').name('force map enable');
+    mapFolder.add(config, 'DENSITY_MAP_ENABLE').name('density map enable');
+    mapFolder.add(config, 'COLOR_MAP_ENABLE').name('color map enable');
 
     gui.add({ fun: () => {
         splatStack.push(parseInt(Math.random() * 20) + 5);
