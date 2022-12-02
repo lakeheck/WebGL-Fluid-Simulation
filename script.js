@@ -53,9 +53,10 @@ let config = {
     SIM_RESOLUTION: 256, //simres
     DYE_RESOLUTION: 1024, //output res 
     ASPECT: 1.0,
-    FLOW: 0.3,
+    FLOW: 0.05,
+    VELOCITYSCALE: 1.0,
     CAPTURE_RESOLUTION: 512, //screen capture res 
-    DENSITY_DISSIPATION: 0.3,
+    DENSITY_DISSIPATION: 2.5, //def need to figure out this one, think perhaps bc im squaring the color in splatColor
     VELOCITY_DISSIPATION: 2.15,
     PRESSURE: 0.8,
     PRESSURE_ITERATIONS: 30,
@@ -231,6 +232,7 @@ function startGUI () {
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'FLOW', 0, 0.5).name('flow');
     gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion');
+    gui.add(config, 'VELOCITYSCALE', 0, 10.0).name('velocity scale');
     gui.add(config, 'PRESSURE', 0.0, 1.0).name('pressure');
     gui.add(config, 'CURL', 0, 50).name('vorticity').step(1);
     gui.add(config, 'SPLAT_RADIUS', 0.01, 1.0).name('splat radius');
@@ -1104,7 +1106,7 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     uniform vec3 color;
     uniform vec2 point;
     uniform float radius;
-
+    uniform float uVelocityScale;
     uniform sampler2D uDensityMap;
     uniform sampler2D uForceMap;
 
@@ -1112,7 +1114,7 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
         //vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
-        vec3 splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * normalize(texture2D(uForceMap, vUv).rgb);
+        vec3 splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * (normalize(texture2D(uForceMap, vUv).rgb)*2.0-1.0) * uVelocityScale;
         splat.z = 0.0;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
@@ -1755,6 +1757,7 @@ function step (dt) {
     gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
     gl.uniform1i(splatVelProgram.uniforms.uForceMap, noise.attach(2)); //add noise for velocity map 
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform1f(splatVelProgram.uniforms.uVelocityScale, config.VELOCITYSCALE);
     gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
     gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
     gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
