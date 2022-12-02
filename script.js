@@ -1994,13 +1994,11 @@ function multipleSplats (amount) {
 }
 
 function splat (x, y, dx, dy, color) {
-    //splitting this into two so that we can splat velocity and color each from a map 
+    //when we click, we just want to add velocity to the sim locally 
+    //so we use the delta in position between clicks and add that to the vel map
     splatProgram.bind();
     gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
-    // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
-    // gl.uniform1i(splatProgram.uniforms.uDensityMap, picture.attach(1));
     gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    // gl.uniform1i(splatProgram.uniforms.uClick, 1);
     gl.uniform2f(splatProgram.uniforms.point, x, y);
     gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
     gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
