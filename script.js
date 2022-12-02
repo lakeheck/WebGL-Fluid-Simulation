@@ -48,6 +48,8 @@ const canvas = document.getElementsByTagName('canvas')[0];
 resizeCanvas();
 
 
+
+
 //inital config for sim params 
 let config = {
     SIM_RESOLUTION: 256, //simres
