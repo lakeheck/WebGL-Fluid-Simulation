@@ -1102,6 +1102,8 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     precision highp float;
     precision highp sampler2D;
 
+
+    uniform int uClick;
     varying vec2 vUv;
     uniform sampler2D uTarget;
     uniform float aspectRatio;
@@ -1115,8 +1117,13 @@ const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        //vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
-        vec3 splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * (normalize(texture2D(uForceMap, vUv).rgb)*2.0-1.0) * uVelocityScale;
+        vec3 splat = vec3(0.0);
+        if(uClick == 0){ //click is 0 if we are simply adding from force map
+            vec3 splat = smoothstep(0.0, 1.0, texture2D(uDensityMap, vUv).xyz) * (normalize(texture2D(uForceMap, vUv).rgb)*2.0-1.0) * uVelocityScale;
+        }
+        else{ //or 1 if the splat is coming from a user interaction 
+            vec3 splat = (exp(-dot(p, p) / radius)*(1.0-color.z) + texture2D(uDensityMap, vUv).xyz*color.z) * uForceMap.rgb;
+        }
         splat.z = 0.0;
         vec3 base = texture2D(uTarget, vUv).xyz;
         gl_FragColor = vec4(base + splat, 1.0);
@@ -1135,14 +1142,21 @@ const splatColorShader = compileShader(gl.FRAGMENT_SHADER, `
 
     uniform float uFlow;
     
+    uniform int uClick;
     uniform sampler2D uDensityMap;
     uniform sampler2D uColor;
 
     void main () {
         vec2 p = vUv - point.xy;
         p.x *= aspectRatio;
-        vec3 splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
-        splat = texture2D(uDensityMap, vUv).xyz * texture2D(uColor, vUv).xyz;
+
+        vec3 splat = vec3(0);
+        if(uClick == 0){
+            splat = texture2D(uDensityMap, vUv).xyz * texture2D(uColor, vUv).xyz;
+        }
+        else{
+            splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
+        }   
         splat = smoothstep(0.0, 1.0, splat);
         splat *= uFlow;
         vec3 base = texture2D(uTarget, vUv).xyz;
@@ -1762,6 +1776,7 @@ function step (dt) {
     gl.uniform1f(splatVelProgram.uniforms.uVelocityScale, config.VELOCITYSCALE);
     gl.uniform2f(splatVelProgram.uniforms.point, 0, 0);
     gl.uniform3f(splatVelProgram.uniforms.color, 0, 0, 1);
+    gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
     gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
@@ -1773,6 +1788,7 @@ function step (dt) {
     gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
     gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
     gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
+    gl.uniform1i(splatVelProgram.uniforms.uClick, 0);
     gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(dye.write);
     dye.swap();
@@ -1953,6 +1969,7 @@ function splat (x, y, dx, dy, color) {
     // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
     gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
     gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
     gl.uniform2f(splatVelProgram.uniforms.point, x, y);
     gl.uniform3f(splatVelProgram.uniforms.color, dx, dy, 0.0);
     gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
@@ -1973,6 +1990,7 @@ function splat (x, y, dx, dy, color) {
     gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
     gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
+    gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
     gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
     gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
     gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
