@@ -1098,6 +1098,27 @@ const splatShader = compileShader(gl.FRAGMENT_SHADER, `
     }
 `);
 
+const splatColorClickShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+
+    varying vec2 vUv;
+    uniform sampler2D uTarget;
+    uniform sampler2D uColor;
+    uniform float aspectRatio;
+    uniform vec3 color;
+    uniform vec2 point;
+    uniform float radius;
+
+    void main () {
+        vec2 p = vUv - point.xy;
+        p.x *= aspectRatio;
+        vec3 splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
+        vec3 base = texture2D(uTarget, vUv).xyz;
+        gl_FragColor = vec4(base + splat, 1.0);
+    }
+`);
+
 const splatVelShader = compileShader(gl.FRAGMENT_SHADER, `
     precision highp float;
     precision highp sampler2D;
@@ -1408,26 +1429,27 @@ let picture = createTextureAsync('flowers_fence.JPG');
 // console.log('loaded picture successfully');
 
 //create all our shader programs 
-const blurProgram            = new Program(blurVertexShader, blurShader);
-const copyProgram            = new Program(baseVertexShader, copyShader);
-const clearProgram           = new Program(baseVertexShader, clearShader);
-const colorProgram           = new Program(baseVertexShader, colorShader);
-const checkerboardProgram    = new Program(baseVertexShader, checkerboardShader);
-const bloomPrefilterProgram  = new Program(baseVertexShader, bloomPrefilterShader);
-const bloomBlurProgram       = new Program(baseVertexShader, bloomBlurShader);
-const bloomFinalProgram      = new Program(baseVertexShader, bloomFinalShader);
-const sunraysMaskProgram     = new Program(baseVertexShader, sunraysMaskShader);
-const sunraysProgram         = new Program(baseVertexShader, sunraysShader);
-const splatProgram           = new Program(baseVertexShader, splatShader);
-const splatVelProgram        = new Program(baseVertexShader, splatVelShader); //added to support color / vel map
-const splatColorProgram      = new Program(baseVertexShader, splatColorShader); //added to support color / vel map
-const advectionProgram       = new Program(baseVertexShader, advectionShader);
-const divergenceProgram      = new Program(baseVertexShader, divergenceShader);
-const curlProgram            = new Program(baseVertexShader, curlShader);
-const vorticityProgram       = new Program(baseVertexShader, vorticityShader);
-const pressureProgram        = new Program(baseVertexShader, pressureShader);
-const gradientSubtractProgram = new Program(baseVertexShader, gradientSubtractShader);
-const noiseProgram           = new Program(baseVertexShader, noiseShader); //noise generator 
+const blurProgram               = new Program(blurVertexShader, blurShader);
+const copyProgram               = new Program(baseVertexShader, copyShader);
+const clearProgram              = new Program(baseVertexShader, clearShader);
+const colorProgram              = new Program(baseVertexShader, colorShader);
+const checkerboardProgram       = new Program(baseVertexShader, checkerboardShader);
+const bloomPrefilterProgram     = new Program(baseVertexShader, bloomPrefilterShader);
+const bloomBlurProgram          = new Program(baseVertexShader, bloomBlurShader);
+const bloomFinalProgram         = new Program(baseVertexShader, bloomFinalShader);
+const sunraysMaskProgram        = new Program(baseVertexShader, sunraysMaskShader);
+const sunraysProgram            = new Program(baseVertexShader, sunraysShader);
+const splatProgram              = new Program(baseVertexShader, splatShader);
+const splatColorClickProgram    = new Program(baseVertexShader, splatColorClickShader);
+const splatVelProgram           = new Program(baseVertexShader, splatVelShader); //added to support color / vel map
+const splatColorProgram         = new Program(baseVertexShader, splatColorShader); //added to support color / vel map
+const advectionProgram          = new Program(baseVertexShader, advectionShader);
+const divergenceProgram         = new Program(baseVertexShader, divergenceShader);
+const curlProgram               = new Program(baseVertexShader, curlShader);
+const vorticityProgram          = new Program(baseVertexShader, vorticityShader);
+const pressureProgram           = new Program(baseVertexShader, pressureShader);
+const gradientSubtractProgram   = new Program(baseVertexShader, gradientSubtractShader);
+const noiseProgram              = new Program(baseVertexShader, noiseShader); //noise generator 
 
 
 //create a material from our display shader source to capitalize on the #defines for optimization 
@@ -1981,17 +2003,15 @@ function splat (x, y, dx, dy, color) {
     // blit(dye.write);
     // dye.swap();
 
-    // splatProgram.bind();
+    splatColorClickProgram.bind();
     // gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
-    // gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    // gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
-    // gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
-    // gl.uniform1i(splatColorProgram.uniforms.uTarget, dye.read.attach(0));
-    // gl.uniform1i(splatColorProgram.uniforms.uColor, picture.attach(1));
-    // gl.uniform1i(splatColorProgram.uniforms.uDensityMap, picture.attach(2));
-    // gl.uniform1f(splatColorProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
-    // blit(dye.write);
-    // dye.swap();
+    gl.uniform1f(splatColorClickProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    gl.uniform2f(splatColorClickProgram.uniforms.point, x, y);
+    gl.uniform1i(splatColorClickProgram.uniforms.uTarget, dye.read.attach(0));
+    gl.uniform1i(splatColorClickProgram.uniforms.uColor, picture.attach(1));
+    gl.uniform1f(splatColorClickProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    blit(dye.write);
+    dye.swap();
 }
 
 function correctRadius (radius) {
