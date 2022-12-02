@@ -229,7 +229,7 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 function startGUI () {
     //dat is a library developed by Googles Data Team for building JS interfaces. Needs to be included in project directory 
     var gui = new dat.GUI({ width: 300 });
-    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_21').onFinishChange(initFramebuffers);
+    gui.add(config, 'DYE_RESOLUTION', { 'high': 1024, 'medium': 512, 'low': 256, 'very low': 128 }).name('quality_22').onFinishChange(initFramebuffers);
     gui.add(config, 'SIM_RESOLUTION', { '32': 32, '64': 64, '128': 128, '256': 256 }).name('sim resolution').onFinishChange(initFramebuffers);
     gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion');
     gui.add(config, 'FLOW', 0, 0.5).name('flow');
@@ -1151,12 +1151,7 @@ const splatColorShader = compileShader(gl.FRAGMENT_SHADER, `
         p.x *= aspectRatio;
 
         vec3 splat = vec3(0);
-        splat = texture2D(uDensityMap, vUv).xyz * texture2D(uColor, vUv).xyz;
-        // if(uClick == 0){
-        // }
-        // else{
-        //     splat = exp(-dot(p, p) / radius) * texture2D(uColor, vUv).xyz;
-        // }   
+        splat = texture2D(uDensityMap, vUv).xyz * texture2D(uColor, vUv).xyz;  
         splat = smoothstep(0.0, 1.0, splat);
         splat *= uFlow;
         vec3 base = texture2D(uTarget, vUv).xyz;
@@ -1964,15 +1959,15 @@ function multipleSplats (amount) {
 
 function splat (x, y, dx, dy, color) {
     //splitting this into two so that we can splat velocity and color each from a map 
-    splatVelProgram.bind();
-    gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
+    splatProgram.bind();
+    gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
     // gl.uniform1i(splatVelProgram.uniforms.uTarget, velocity.read.attach(0));
-    gl.uniform1i(splatVelProgram.uniforms.uDensityMap, picture.attach(1));
-    gl.uniform1f(splatVelProgram.uniforms.aspectRatio, canvas.width / canvas.height);
-    gl.uniform1i(splatVelProgram.uniforms.uClick, 1);
-    gl.uniform2f(splatVelProgram.uniforms.point, x, y);
-    gl.uniform3f(splatVelProgram.uniforms.color, dx, dy, 0.0);
-    gl.uniform1f(splatVelProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
+    // gl.uniform1i(splatProgram.uniforms.uDensityMap, picture.attach(1));
+    gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    // gl.uniform1i(splatProgram.uniforms.uClick, 1);
+    gl.uniform2f(splatProgram.uniforms.point, x, y);
+    gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
+    gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100.0));
     blit(velocity.write);
     velocity.swap();
 
@@ -1986,7 +1981,7 @@ function splat (x, y, dx, dy, color) {
     // blit(dye.write);
     // dye.swap();
 
-    splatColorProgram.bind();
+    splatProgram.bind();
     gl.uniform1f(splatColorProgram.uniforms.uFlow, config.FLOW);
     gl.uniform1f(splatColorProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     gl.uniform2f(splatColorProgram.uniforms.point, 0, 0);
