@@ -1149,7 +1149,7 @@ let noise;
 
 //load texture for dithering
 let ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
-let picture = createTextureAsync('flowers_fence.JPG');
+let picture = createTextureAsync('img/flowers_fence.JPG');
 // console.log('loaded picture successfully');
 
 //create all our shader programs 
