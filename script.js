@@ -551,7 +551,7 @@ const noiseShader = compileShader(gl.FRAGMENT_SHADER, `
     #define PI 3.141592653589793
     #define TWOPI 6.28318530718
 
-    varying vec2 vUv;
+    varying vec2 vUV;
 
 
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
